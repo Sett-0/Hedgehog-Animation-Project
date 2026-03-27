@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hedgehog's Home</title>
+<style>
+body {
+    background-color: rgba(228, 233, 238, 0.5);
+    overflow: hidden; /* prevent scrollbars when hedgehogs move */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+#sun_image {
+    position: absolute;
+    top: 20vh;
+    left: 65%;
+    transform: translate(-50%, -50%);
+}
+
+#home_image {
+    position: absolute;
+    top: 50vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-filter: drop-shadow(-10px 10px 5px #4682B4);
+    filter: drop-shadow(-10px 10px 5px #4682B4);
+}
+
+.hedgehog {
+    position: absolute;
+    top: 75vh;
+    width: 10%;
+    transform: translate(-50%, -50%);
+}
+
+#hedgehog1 {
+    left: 20%;
+}
+
+#hedgehog2 {
+    left: 40%;
+}
+
+.rotate {
+    animation: rotation 18s infinite linear;
+}
+
+.container {
+    text-align: center;
+    color: aqua;
+    text-shadow: 0 0 3px #FF0000, 0 0 5px #0000FF;
+}
+
+.text-position {
+    position: absolute;
+    top: 15vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#buttons {
+    position: absolute;
+    top: 5vh;
+    left: 5%;
+}
+
+.button {
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes rotation {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(359deg); }
+}
+</style>
+
+<script>
+let x1 = 20;
+let x2 = 40;
+let direction1 = 1;
+let direction2 = 1;
+let speed1 = 0.5; // movement speed (percent per frame)
+let speed2 = 0.3;
+
+const audio = new Audio("Files/Ezhik-rezinovy.mp3");
+audio.loop = true;
+
+function playMusic() {
+    audio.play();
+}
+
+function pauseMusic() {
+    audio.pause();
+}
+
+function setVolume(value) {
+    audio.volume = value;
+}
+
+function moveHedgehogs() {
+    x1 += speed1 * direction1;
+    x2 += speed2 * direction2;
+
+    if (x1 > 80 || x1 < 20) direction1 *= -1;
+    if (x2 > 80 || x2 < 20) direction2 *= -1;
+
+    // Apply positions
+    document.getElementById('hedgehog1').style.left = x1 + '%';
+    document.getElementById('hedgehog2').style.left = x2 + '%';
+
+    // Flip images based on direction
+    let scale1 = direction1 > 0 ? 1 : -1;
+    let scale2 = direction2 > 0 ? 1 : -1;
+    document.getElementById('hedgehog1').style.transform = `translate(-50%, -50%) scaleX(${scale1})`;
+    document.getElementById('hedgehog2').style.transform = `translate(-50%, -50%) scaleX(${scale2})`;
+
+    requestAnimationFrame(moveHedgehogs);
+}
+
+window.onload = function() {
+    moveHedgehogs();
+};
+</script>
+
+</head>
+<body>
+<div class="container">
+    <div id="buttons">
+        <button class="button" onclick="playMusic()"> Play music </button>
+        <button class="button" onclick="pauseMusic()"> Pause music </button>
+        
+        <label style="font-size:20px">Volume:</label><br>
+        <input type="range" min="0" max="1" step="0.01" value="1" oninput="setVolume(this.value)">
+    </div>
+    <div id="home_image">
+        <img src="Files/bg_hedgehog_home.png" width="100%" height="auto">
+    </div>
+
+    <div id="sun_image">
+        <img src="Files/sun.png" class="rotate" width="130%" height="auto">
+    </div>
+
+    <div id="hedgehog1" class="hedgehog">
+        <img src="Files/hedgehog1.png" width="100%" height="auto">
+    </div>
+
+    <div id="hedgehog2" class="hedgehog">
+        <img src="Files/hedgehog1.png" width="100%" height="auto">
+    </div>
+
+    <div class="text-position">
+        <h1>Hedgehog's Home</h1>
+    </div>
+
+</div>
+</body>
+</html>
